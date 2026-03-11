@@ -1,42 +1,30 @@
+#include <math.h>
 #include <stdio.h>
 
-static int lire_operation(char *operation)
-{
-    printf("Operation (+, -, *, /, s pour sortir) : ");
-    return scanf(" %c", operation);
-}
-
-static int lire_operandes(double *gauche, double *droite)
-{
-    printf("Premier operande : ");
-    if (scanf("%lf", gauche) != 1) {
-        return 0;
-    }
-
-    printf("Second operande : ");
-    return scanf("%lf", droite) == 1;
-}
+#include "../../common/saisie.h"
 
 int main(void)
 {
     char operation = '\0';
+    const SaisieOptions options_operation = {SAISIE_CARACTERE, 0, 0, 0.0, 0.0, "Operation invalide."};
+    const SaisieOptions options_reel = {SAISIE_REEL, 0, 0, 0.0, 0.0, "Operande invalide."};
 
     while (1) {
         double gauche = 0.0;
         double droite = 0.0;
         double resultat = 0.0;
 
-        if (lire_operation(&operation) != 1) {
-            fprintf(stderr, "Saisie invalide.\n");
-            return 1;
+        if (!saisie_lire("Operation (+, -, *, /, s pour sortir) : ", &options_operation, &operation)) {
+            break;
         }
 
         if (operation == 's') {
             break;
         }
 
-        if (!lire_operandes(&gauche, &droite)) {
-            fprintf(stderr, "Operande invalide.\n");
+        if (!saisie_lire("Premier operande : ", &options_reel, &gauche)
+            || !saisie_lire("Second operande : ", &options_reel, &droite)) {
+            fprintf(stderr, "Fin de saisie inattendue.\n");
             return 1;
         }
 

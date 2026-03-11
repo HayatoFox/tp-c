@@ -1,24 +1,21 @@
+#include <limits.h>
 #include <stdio.h>
+
+#include "../../common/saisie.h"
 
 int main(void)
 {
     int a = 0;
     int b = 0;
+    const SaisieOptions options_positif = {SAISIE_ENTIER, 1, 1, 1.0, (double)INT_MAX, "Saisie invalide. Entrez un entier strictement positif."};
 
-    printf("a : ");
-    if (scanf("%d", &a) != 1) {
-        fprintf(stderr, "Saisie invalide pour a.\n");
+    if (!saisie_lire("a : ", &options_positif, &a)) {
+        fprintf(stderr, "Fin de saisie inattendue.\n");
         return 1;
     }
 
-    printf("b : ");
-    if (scanf("%d", &b) != 1) {
-        fprintf(stderr, "Saisie invalide pour b.\n");
-        return 1;
-    }
-
-    if (a <= 0 || b <= 0) {
-        fprintf(stderr, "a et b doivent etre strictement positifs.\n");
+    if (!saisie_lire("b : ", &options_positif, &b)) {
+        fprintf(stderr, "Fin de saisie inattendue.\n");
         return 1;
     }
 

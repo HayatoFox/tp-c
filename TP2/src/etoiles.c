@@ -1,4 +1,7 @@
+#include <limits.h>
 #include <stdio.h>
+
+#include "../../common/saisie.h"
 
 static void afficher_ligne(int espaces, int etoiles)
 {
@@ -64,13 +67,12 @@ int main(void)
 {
     int n = 0;
     int choix = -1;
+    const SaisieOptions options_n = {SAISIE_ENTIER, 1, 1, 1.0, 20.0, "N doit etre compris entre 1 et 20."};
+    const SaisieOptions options_choix = {SAISIE_ENTIER, 1, 1, 0.0, 5.0, "Choix invalide."};
 
-    while (n < 1 || n > 20) {
-        printf("Entrez N (1..20) : ");
-        if (scanf("%d", &n) != 1) {
-            fprintf(stderr, "Saisie invalide.\n");
-            return 1;
-        }
+    if (!saisie_lire("Entrez N (1..20) : ", &options_n, &n)) {
+        fprintf(stderr, "Fin de saisie inattendue.\n");
+        return 1;
     }
 
     while (choix != 0) {
@@ -81,10 +83,9 @@ int main(void)
         printf("4 - Pyramide\n");
         printf("5 - Losange\n");
         printf("0 - Quitter\n");
-        printf("Votre choix : ");
 
-        if (scanf("%d", &choix) != 1) {
-            fprintf(stderr, "Saisie invalide.\n");
+        if (!saisie_lire("Votre choix : ", &options_choix, &choix)) {
+            fprintf(stderr, "Fin de saisie inattendue.\n");
             return 1;
         }
 
@@ -105,9 +106,6 @@ int main(void)
             motif_5(n);
             break;
         case 0:
-            break;
-        default:
-            printf("Choix invalide.\n");
             break;
         }
     }

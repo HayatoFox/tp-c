@@ -1,4 +1,7 @@
+#include <limits.h>
 #include <stdio.h>
+
+#include "../../common/saisie.h"
 
 static long long somme_for_croissant(int n)
 {
@@ -51,15 +54,10 @@ static long long somme_while_decroissant(int n)
 int main(void)
 {
     int n = 0;
+    const SaisieOptions options_n = {SAISIE_ENTIER, 1, 1, 0.0, (double)INT_MAX, "Saisie invalide. Entrez un entier positif ou nul."};
 
-    printf("n : ");
-    if (scanf("%d", &n) != 1) {
-        fprintf(stderr, "Saisie invalide.\n");
-        return 1;
-    }
-
-    if (n < 0) {
-        fprintf(stderr, "n doit etre positif ou nul.\n");
+    if (!saisie_lire("n : ", &options_n, &n)) {
+        fprintf(stderr, "Fin de saisie inattendue.\n");
         return 1;
     }
 
