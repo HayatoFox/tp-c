@@ -2,6 +2,7 @@
 #define SAISIE_H
 
 #include <ctype.h>
+#include <errno.h>
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>
@@ -11,6 +12,7 @@
 typedef enum {
     SAISIE_CARACTERE,
     SAISIE_ENTIER,
+    SAISIE_ENTIER_LONG,
     SAISIE_REEL
 } SaisieType;
 
@@ -144,6 +146,7 @@ static inline int saisie_lire(const char *invite, const SaisieOptions *options, 
     char *fin = NULL;
     char *position = NULL;
     long entier = 0;
+    long long long_long_val = 0;
     double reel = 0.0;
 
     while (1) {
@@ -189,7 +192,14 @@ static inline int saisie_lire(const char *invite, const SaisieOptions *options, 
 
         case SAISIE_ENTIER:
             /* strtol convertit la chaine en entier et laisse fin sur le premier caractere non lu. */
+            errno = 0;
             entier = strtol(buffer, &fin, 10);
+            
+            if (errno == ERANGE) {
+                printf("Erreur : la valeur saisie depasse la capacite limite de la machine.\n");
+                continue;
+            }
+
             if (fin == buffer || saisie_espaces_uniquement(fin) == 0 || entier < INT_MIN || entier > INT_MAX) {
                 printf("%s\n", options->message_erreur);
                 continue;
@@ -204,9 +214,39 @@ static inline int saisie_lire(const char *invite, const SaisieOptions *options, 
             *(int *)resultat = (int)entier;
             return 1;
 
+        case SAISIE_ENTIER_LONG:
+            /* strtoll convertit la chaine en long long (64 bits). */
+            errno = 0;
+            long_long_val = strtoll(buffer, &fin, 10);
+            
+            if (errno == ERANGE) {
+                printf("Erreur : la valeur saisie depasse la capacite (64 bits) de la machine.\n");
+                continue;
+            }
+
+            if (fin == buffer || saisie_espaces_uniquement(fin) == 0) {
+                printf("%s\n", options->message_erreur);
+                continue;
+            }
+
+            if (saisie_valider_bornes((double)long_long_val, options) == 0) {
+                printf("%s\n", options->message_erreur);
+                continue;
+            }
+
+            *(long long *)resultat = long_long_val;
+            return 1;
+
         case SAISIE_REEL:
             /* Meme principe qu'au-dessus, mais pour les valeurs reelles. */
+            errno = 0;
             reel = strtod(buffer, &fin);
+            
+            if (errno == ERANGE) {
+                printf("Erreur : Valeur hors des limites flottantes de la machine.\n");
+                continue;
+            }
+
             if (fin == buffer || saisie_espaces_uniquement(fin) == 0 || !isfinite(reel)) {
                 printf("%s\n", options->message_erreur);
                 continue;
@@ -229,6 +269,14 @@ static inline int saisie_lire(const char *invite, const SaisieOptions *options, 
 static inline void lire_entier(const char *invite, int *resultat)
 {
     SaisieOptions opt = {SAISIE_ENTIER, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
+    if (!saisie_lire(invite, &opt, resultat)) {
+        exit(1);
+    }
+}
+
+static inline void lire_entier_long(const char *invite, long long *resultat)
+{
+    SaisieOptions opt = {SAISIE_ENTIER_LONG, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
     if (!saisie_lire(invite, &opt, resultat)) {
         exit(1);
     }

@@ -3,11 +3,16 @@
 
 int main(void)
 {
-    int a;
-    int b;
+    long long a;
+    long long b;
 
-    lire_entier("a : ", &a);
-    lire_entier("b : ", &b);
+    lire_entier_long("a : ", &a);
+    lire_entier_long("b : ", &b);
+
+    if (a <= 0 || b <= 0) {
+        printf("Veuillez entrer des nombres strictement positifs.\n");
+        return 1;
+    }
 
     while (a != b) {
         if (a > b) {
@@ -17,6 +22,6 @@ int main(void)
         }
     }
 
-    printf("PGCD = %d\n", a);
+    printf("PGCD = %lld\n", a);
     return 0;
 }
