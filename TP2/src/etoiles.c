@@ -1,4 +1,3 @@
-#include <limits.h>
 #include <stdio.h>
 
 #include "../../common/saisie.h"
@@ -67,13 +66,13 @@ int main(void)
 {
     int n = 0;
     int choix = -1;
-    const SaisieOptions options_n = {SAISIE_ENTIER, 1, 1, 1.0, 20.0, "N doit etre compris entre 1 et 20."};
-    const SaisieOptions options_choix = {SAISIE_ENTIER, 1, 1, 0.0, 5.0, "Choix invalide."};
 
-    if (!saisie_lire("Entrez N (1..20) : ", &options_n, &n)) {
-        fprintf(stderr, "Fin de saisie inattendue.\n");
-        return 1;
-    }
+    do {
+        lire_entier("Entrez N (1..20) : ", &n);
+        if (n < 1 || n > 20) {
+            printf("N doit etre compris entre 1 et 20.\n");
+        }
+    } while (n < 1 || n > 20);
 
     while (choix != 0) {
         printf("\nChoisissez un motif :\n");
@@ -84,10 +83,7 @@ int main(void)
         printf("5 - Losange\n");
         printf("0 - Quitter\n");
 
-        if (!saisie_lire("Votre choix : ", &options_choix, &choix)) {
-            fprintf(stderr, "Fin de saisie inattendue.\n");
-            return 1;
-        }
+        lire_entier("Votre choix : ", &choix);
 
         switch (choix) {
         case 1:
@@ -106,6 +102,10 @@ int main(void)
             motif_5(n);
             break;
         case 0:
+            /* Sortie */
+            break;
+        default:
+            printf("Choix invalide.\n");
             break;
         }
     }

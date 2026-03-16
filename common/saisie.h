@@ -32,7 +32,7 @@ typedef struct {
  * Verifie qu'apres la valeur lue il ne reste que des espaces ou un retour a la ligne.
  * Ca permet d'accepter "15" ou "15   ".
  */
-static int saisie_espaces_uniquement(const char *texte)
+static inline int saisie_espaces_uniquement(const char *texte)
 {
     while (*texte != '\0') {
         if (!isspace((unsigned char)*texte)) {
@@ -52,7 +52,7 @@ static int saisie_espaces_uniquement(const char *texte)
  *  0  -> fin de fichier / entree fermee
  * -1  -> la ligne etait trop longue pour le buffer
  */
-static int saisie_lire_ligne(const char *invite, char *buffer, size_t taille)
+static inline int saisie_lire_ligne(const char *invite, char *buffer, int taille)
 {
     int caractere = 0;
     size_t longueur = 0;
@@ -82,7 +82,7 @@ static int saisie_lire_ligne(const char *invite, char *buffer, size_t taille)
  * Variante simple pour lire une chaine de caracteres.
  * On reutilise la lecture de ligne, puis on enleve le retour a la ligne final si besoin.
  */
-static int saisie_lire_texte(const char *invite, char *buffer, size_t taille, const char *message_erreur)
+static inline int saisie_lire_texte(const char *invite, char *buffer, int taille, const char *message_erreur)
 {
     while (1) {
         int lecture = saisie_lire_ligne(invite, buffer, taille);
@@ -111,7 +111,7 @@ static int saisie_lire_texte(const char *invite, char *buffer, size_t taille, co
  * Ca permet d'utiliser la meme fonction aussi bien pour un entier libre
  * que pour une valeur comprise entre deux limites.
  */
-static int saisie_valider_bornes(double valeur, const SaisieOptions *options)
+static inline int saisie_valider_bornes(double valeur, const SaisieOptions *options)
 {
     if (options->borne_min_active != 0 && valeur < options->borne_min) {
         return 0;
@@ -138,7 +138,7 @@ static int saisie_valider_bornes(double valeur, const SaisieOptions *options)
  * 1 si une valeur valide a ete lue
  * 0 si on tombe sur EOF / fin de saisie
  */
-static int saisie_lire(const char *invite, const SaisieOptions *options, void *resultat)
+static inline int saisie_lire(const char *invite, const SaisieOptions *options, void *resultat)
 {
     char buffer[128];
     char *fin = NULL;
@@ -226,7 +226,7 @@ static int saisie_lire(const char *invite, const SaisieOptions *options, void *r
     }
 }
 
-static void lire_entier(const char *invite, int *resultat)
+static inline void lire_entier(const char *invite, int *resultat)
 {
     SaisieOptions opt = {SAISIE_ENTIER, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
     if (!saisie_lire(invite, &opt, resultat)) {
@@ -234,7 +234,7 @@ static void lire_entier(const char *invite, int *resultat)
     }
 }
 
-static void lire_reel(const char *invite, double *resultat)
+static inline void lire_reel(const char *invite, double *resultat)
 {
     SaisieOptions opt = {SAISIE_REEL, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
     if (!saisie_lire(invite, &opt, resultat)) {
@@ -242,7 +242,7 @@ static void lire_reel(const char *invite, double *resultat)
     }
 }
 
-static void lire_caractere(const char *invite, char *resultat)
+static inline void lire_caractere(const char *invite, char *resultat)
 {
     SaisieOptions opt = {SAISIE_CARACTERE, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
     if (!saisie_lire(invite, &opt, resultat)) {
