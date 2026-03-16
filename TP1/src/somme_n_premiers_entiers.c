@@ -1,70 +1,50 @@
-#include <limits.h>
 #include <stdio.h>
-
 #include "../../common/saisie.h"
-
-static long long somme_for_croissant(int n)
-{
-    long long somme = 0;
-
-    for (int i = 1; i <= n; ++i) {
-        somme += i;
-    }
-
-    return somme;
-}
-
-static long long somme_for_decroissant(int n)
-{
-    long long somme = 0;
-
-    for (int i = n; i >= 1; --i) {
-        somme += i;
-    }
-
-    return somme;
-}
-
-static long long somme_while_croissant(int n)
-{
-    int i = 1;
-    long long somme = 0;
-
-    while (i <= n) {
-        somme += i;
-        ++i;
-    }
-
-    return somme;
-}
-
-static long long somme_while_decroissant(int n)
-{
-    int i = n;
-    long long somme = 0;
-
-    while (i >= 1) {
-        somme += i;
-        --i;
-    }
-
-    return somme;
-}
 
 int main(void)
 {
-    int n = 0;
-    const SaisieOptions options_n = {SAISIE_ENTIER, 1, 1, 0.0, (double)INT_MAX, "Saisie invalide. Entrez un entier positif ou nul."};
+    int n;
+    long long somme;
+    int k;
 
-    if (!saisie_lire("n : ", &options_n, &n)) {
-        fprintf(stderr, "Fin de saisie inattendue.\n");
+    lire_entier("n : ", &n);
+
+    if (n < 0) {
+        printf("Le nombre doit etre positif ou nul.\n");
         return 1;
     }
 
-    printf("for croissant     : %lld\n", somme_for_croissant(n));
-    printf("for decroissant   : %lld\n", somme_for_decroissant(n));
-    printf("while croissant   : %lld\n", somme_while_croissant(n));
-    printf("while decroissant : %lld\n", somme_while_decroissant(n));
+    /* Boucle for a indice incremente */
+    somme = 0;
+    for (int i = 1; i <= n; ++i) {
+        somme += i;
+    }
+    printf("for croissant     : %lld\n", somme);
+
+    /* Boucle for a indice decremente */
+    somme = 0;
+    for (int i = n; i >= 1; --i) {
+        somme += i;
+    }
+    printf("for decroissant   : %lld\n", somme);
+
+    /* Boucle while a indice incremente */
+    somme = 0;
+    k = 1;
+    while (k <= n) {
+        somme += k;
+        ++k;
+    }
+    printf("while croissant   : %lld\n", somme);
+
+    /* Boucle while a indice decremente */
+    somme = 0;
+    k = n;
+    while (k >= 1) {
+        somme += k;
+        --k;
+    }
+    printf("while decroissant : %lld\n", somme);
 
     return 0;
 }

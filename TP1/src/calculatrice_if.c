@@ -1,32 +1,23 @@
-#include <math.h>
 #include <stdio.h>
-
 #include "../../common/saisie.h"
 
 int main(void)
 {
-    char operation = '\0';
-    const SaisieOptions options_operation = {SAISIE_CARACTERE, 0, 0, 0.0, 0.0, "Operation invalide."};
-    const SaisieOptions options_reel = {SAISIE_REEL, 0, 0, 0.0, 0.0, "Operande invalide."};
+    char operation;
 
     while (1) {
         double gauche = 0.0;
         double droite = 0.0;
         double resultat = 0.0;
 
-        if (!saisie_lire("Operation (+, -, *, /, s pour sortir) : ", &options_operation, &operation)) {
-            break;
-        }
+        lire_caractere("Operation (+, -, *, /, s pour sortir) : ", &operation);
 
         if (operation == 's') {
             break;
         }
 
-        if (!saisie_lire("Premier operande : ", &options_reel, &gauche)
-            || !saisie_lire("Second operande : ", &options_reel, &droite)) {
-            fprintf(stderr, "Fin de saisie inattendue.\n");
-            return 1;
-        }
+        lire_reel("Premier operande : ", &gauche);
+        lire_reel("Second operande : ", &droite);
 
         if (operation == '+') {
             resultat = gauche + droite;

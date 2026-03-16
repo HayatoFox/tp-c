@@ -226,4 +226,28 @@ static int saisie_lire(const char *invite, const SaisieOptions *options, void *r
     }
 }
 
-#endif
+static void lire_entier(const char *invite, int *resultat)
+{
+    SaisieOptions opt = {SAISIE_ENTIER, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
+    if (!saisie_lire(invite, &opt, resultat)) {
+        exit(1);
+    }
+}
+
+static void lire_reel(const char *invite, double *resultat)
+{
+    SaisieOptions opt = {SAISIE_REEL, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
+    if (!saisie_lire(invite, &opt, resultat)) {
+        exit(1);
+    }
+}
+
+static void lire_caractere(const char *invite, char *resultat)
+{
+    SaisieOptions opt = {SAISIE_CARACTERE, 0, 0, 0.0, 0.0, "Saisie invalide, veuillez recommencer."};
+    if (!saisie_lire(invite, &opt, resultat)) {
+        exit(1);
+    }
+}
+
+#endif 
