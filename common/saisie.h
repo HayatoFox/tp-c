@@ -298,4 +298,11 @@ static inline void lire_caractere(const char *invite, char *resultat)
     }
 }
 
+static inline void lire_texte(const char *invite, char *buffer, int taille)
+{
+    if (!saisie_lire_texte(invite, buffer, taille, "Saisie invalide, veuillez recommencer.")) {
+        exit(1);
+    }
+}
+
 #endif 
