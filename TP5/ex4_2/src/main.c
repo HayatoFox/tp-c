@@ -24,9 +24,20 @@ int main(void)
     // Creation des maillons en fin de liste
     for (cpt = 1; cpt < N; cpt++) {
         lc->suiv = (maillon *)malloc(sizeof(maillon));
+        if (lc->suiv == NULL) {
+            // Libérer la mémoire déjà allouée avant de quitter
+            lc->suiv = NULL;
+            maillon *tmp = tete;
+            while (tmp != NULL) {
+                maillon *suivant = tmp->suiv;
+                free(tmp);
+                tmp = suivant;
+            }
+            return 1;
+        }
         lc = lc->suiv;
     }
-    lc->suiv = NULL;
+        lc->suiv = NULL;
 
     cpt = 0;
     lc = tete;

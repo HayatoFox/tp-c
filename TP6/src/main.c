@@ -212,29 +212,38 @@ static Personne* charger_liste(Personne *tete)
             break;
         }
 
-        /* fgets est utilise pour eviter les problemes d'espaces dans les noms */
-        if (fscanf(f, "%d %d %lld %49s\n", 
+        /* 1. On lit les 3 nombres. L'espace à la fin du format est crucial : 
+           il consomme les espaces ou le saut de ligne restants avant le prénom */
+        if (fscanf(f, "%d %d %lld ", 
             &nouveau->badge, 
             &nouveau->code_secret, 
-            &nouveau->date_dernier_passage, 
-            nouveau->prenom) != 4) {
+            &nouveau->date_dernier_passage) != 3) {
             
             free(nouveau);
             break;
         }
 
-        /* Le nom de famille peut contenir des espaces (d'ou \n au-dessus et fgets en-dessous) */
+        /* 2. Lire le prénom (jusqu'à la fin de la ligne, gère les espaces) */
+        if (fgets(nouveau->prenom, TAILLE_TEXTE, f) == NULL) {
+            free(nouveau);
+            break;
+        }
+        size_t len_p = strlen(nouveau->prenom);
+        if (len_p > 0 && nouveau->prenom[len_p - 1] == '\n') {
+            nouveau->prenom[len_p - 1] = '\0';
+        }
+
+        /* 3. Lire le nom (ligne suivante, gère les espaces) */
         if (fgets(nouveau->nom, TAILLE_TEXTE, f) == NULL) {
             free(nouveau);
             break;
         }
-        
-        /* Enlever le saut de ligne de fgets */
-        size_t len = strlen(nouveau->nom);
-        if (len > 0 && nouveau->nom[len - 1] == '\n') {
-            nouveau->nom[len - 1] = '\0';
+        size_t len_n = strlen(nouveau->nom);
+        if (len_n > 0 && nouveau->nom[len_n - 1] == '\n') {
+            nouveau->nom[len_n - 1] = '\0';
         }
 
+        /* 4. Chainage du nouveau maillon */
         nouveau->suivant = NULL;
         nouveau->precedent = dernier;
 
